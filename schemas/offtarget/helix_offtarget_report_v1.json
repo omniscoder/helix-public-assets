@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_offtarget_report_v1.json",
+  "title": "Helix Off-target Report v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "modelId",
+    "modelVersion",
+    "inputsSha256",
+    "summary",
+    "guide",
+    "genome",
+    "params",
+    "hits"
+  ],
+  "properties": {
+    "schema": {"const": "helix_offtarget_report_v1"},
+    "modelId": {"type": "string"},
+    "modelVersion": {"type": "string"},
+    "inputsSha256": {"type": "string"},
+    "summary": {"type": "array", "items": {"type": "string"}},
+    "guide": {"type": "object", "additionalProperties": true},
+    "genome": {"type": "object", "additionalProperties": true},
+    "params": {"type": "object", "additionalProperties": true},
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "contig": {"type": "string"},
+          "start": {"type": "integer"},
+          "end": {"type": "integer"},
+          "strand": {"type": "string"},
+          "pam_ok": {"type": "boolean"},
+          "mismatches": {"type": "array"},
+          "distance": {"type": ["integer", "null"]},
+          "score": {"type": ["number", "null"]},
+          "mismatchPositions": {"type": "array", "items": {"type": "integer"}},
+          "seedMismatchCount": {"type": ["integer", "null"]},
+          "totalMismatchCount": {"type": ["integer", "null"]},
+          "pamSequence": {"type": ["string", "null"]},
+          "pamClass": {"type": ["string", "null"]},
+          "riskScore": {"type": ["number", "null"]},
+          "riskTier": {"type": ["string", "null"]},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "totalHits": {"type": ["integer", "null"]},
+    "hitCap": {"type": ["integer", "null"]},
+    "isTruncated": {"type": ["boolean", "null"]},
+    "hitsReturned": {"type": ["integer", "null"]},
+    "maxMismatches": {"type": ["integer", "null"]},
+    "highRiskCount": {"type": ["integer", "null"]},
+    "mediumRiskCount": {"type": ["integer", "null"]},
+    "lowRiskCount": {"type": ["integer", "null"]}
+  }
+}

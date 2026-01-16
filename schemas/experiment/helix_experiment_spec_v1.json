@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_experiment_spec_v1.json",
+  "title": "Helix Experiment Spec v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "experimentId",
+    "reference",
+    "locus",
+    "intent",
+    "editModalities",
+    "constraints",
+    "assumptions"
+  ],
+  "properties": {
+    "schema": {"const": "helix_experiment_spec_v1"},
+    "experimentId": {"type": "string"},
+    "createdAt": {"type": ["string", "null"], "format": "date-time"},
+    "reference": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["genomeBuild", "contig"],
+      "properties": {
+        "genomeBuild": {"type": "string"},
+        "contig": {"type": "string"},
+        "contigSha256": {"type": ["string", "null"]},
+        "contigsSha256": {"type": ["string", "null"]},
+        "genomeSha256": {"type": ["string", "null"]}
+      }
+    },
+    "locus": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["chr", "start", "end", "strand"],
+      "properties": {
+        "chr": {"type": "string"},
+        "start": {"type": "integer"},
+        "end": {"type": "integer"},
+        "strand": {"type": "string", "enum": ["+", "-"]}
+      }
+    },
+    "intent": {
+      "type": "string",
+      "enum": [
+        "knockout",
+        "precise_substitution",
+        "tag_insertion",
+        "promoter_edit",
+        "prime_edit",
+        "multiplex"
+      ]
+    },
+    "editModalities": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["crispr_cut", "prime", "pcr"]}
+    },
+    "intentRef": {
+      "type": ["object", "null"],
+      "additionalProperties": true,
+      "properties": {
+        "kind": {"type": "string"},
+        "sha256": {"type": "string"}
+      }
+    },
+    "editIntent": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "guideObjectives": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "constraints": {"type": "object", "additionalProperties": true},
+    "assumptions": {"type": "object", "additionalProperties": true}
+  }
+}

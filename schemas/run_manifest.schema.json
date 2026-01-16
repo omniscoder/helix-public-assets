@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/run_manifest.schema.json",
+  "title": "RunManifest v0",
+  "description": "Strict run export manifest for decision-support gating and offline validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "created_at_utc",
+    "helix_version",
+    "git_sha",
+    "supported_context",
+    "gate_level",
+    "decision_support_enabled",
+    "denial_reason_code",
+    "ood_flag",
+    "dataset_version",
+    "baseline",
+    "calibration_bundle_ref"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "run_manifest_v0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "helix_version": {"type": "string", "minLength": 1},
+    "git_sha": {
+      "type": ["string", "null"],
+      "description": "Git commit SHA for the running Helix build (or null if unavailable)."
+    },
+    "supported_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context_version", "context_tuple", "supported_context_id", "supported_context_hash"],
+      "properties": {
+        "context_version": {"type": "string", "const": "context_v0"},
+        "supported_context_id": {"type": ["string", "null"]},
+        "supported_context_hash": {"type": ["string", "null"], "pattern": "^(sha256:[0-9a-fA-F]{64})?$"},
+        "context_tuple": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["organism", "genome_build", "assay", "edit_type", "measurement"],
+          "properties": {
+            "organism": {"type": "string", "minLength": 1},
+            "genome_build": {"type": "string", "minLength": 1},
+            "assay": {"type": "string", "minLength": 1},
+            "edit_type": {"type": "string", "minLength": 1},
+            "measurement": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "gate_level": {"type": "integer", "minimum": 0, "maximum": 2},
+    "decision_support_enabled": {"type": "boolean"},
+    "denial_reason_code": {"type": "string", "minLength": 1},
+    "ood_flag": {"type": "boolean"},
+    "dataset_version": {
+      "anyOf": [
+        {"$ref": "dataset_version.schema.json"},
+        {"type": "null"}
+      ]
+    },
+    "baseline": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["baseline_id", "baseline_hash"],
+      "properties": {
+        "baseline_id": {"type": "string", "minLength": 1},
+        "baseline_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+      }
+    },
+    "calibration_bundle_ref": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["bundle_id", "model_hash", "context_hash", "dataset_version_hash", "gate_level"],
+      "properties": {
+        "bundle_id": {"type": "string", "minLength": 1},
+        "model_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "context_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "dataset_version_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "gate_level": {"type": "integer", "minimum": 0, "maximum": 2},
+        "signature": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"gate_level": {"minimum": 1}}},
+      "then": {
+        "properties": {
+          "dataset_version": {"type": "object"},
+          "calibration_bundle_ref": {"type": "object"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"gate_level": {"minimum": 2}}},
+      "then": {
+        "properties": {
+          "decision_support_enabled": {"const": true}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"decision_support_enabled": {"const": true}}},
+      "then": {"properties": {"gate_level": {"const": 2}}}
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/outputs/gate2.schema.json",
+  "title": "Gate2Outputs v0",
+  "description": "Gate 2 outputs: calibrated probabilities and confidence intervals (decision-grade semantics).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "gate_level", "outcome_value_label", "outcomes"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "gate2_v0"},
+    "gate_level": {"type": "integer", "const": 2},
+    "outcome_value_label": {"type": "string", "const": "probability"},
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["outcome_id", "probability", "ci95", "rank"],
+        "properties": {
+          "outcome_id": {"type": "string", "minLength": 1},
+          "rank": {"type": "integer", "minimum": 1},
+          "probability": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+          "ci95": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["lower", "upper"],
+            "properties": {
+              "lower": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+              "upper": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+            }
+          },
+          "label": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "baseline_metrics": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["baseline_score", "uplift"],
+      "properties": {
+        "baseline_score": {"type": "number"},
+        "uplift": {"type": "number"}
+      }
+    }
+  }
+}
+

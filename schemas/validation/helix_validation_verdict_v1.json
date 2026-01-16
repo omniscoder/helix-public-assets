@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_validation_verdict_v1.json",
+  "title": "Helix Validation Verdict v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "pack", "status", "checks", "summary"],
+  "properties": {
+    "schema": { "const": "helix_validation_verdict_v1" },
+    "schemaVersion": { "type": ["string", "null"] },
+    "createdAt": { "type": ["string", "null"], "format": "date-time" },
+    "durationMs": { "type": ["integer", "null"] },
+    "meta": {
+      "type": ["object", "null"],
+      "additionalProperties": true,
+      "properties": {
+        "helixVersion": { "type": ["string", "null"] },
+        "gitSha": { "type": ["string", "null"] },
+        "backend": { "type": ["string", "null"] },
+        "os": { "type": ["string", "null"] },
+        "arch": { "type": ["string", "null"] },
+        "platform": { "type": ["string", "null"] },
+        "python": { "type": ["string", "null"] },
+        "pythonImplementation": { "type": ["string", "null"] },
+        "dependencies": {
+          "type": ["object", "null"],
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "pack": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "path": { "type": ["string", "null"] },
+        "sha256": { "type": ["string", "null"] },
+        "manifestFileSha256": { "type": ["string", "null"] },
+        "manifestSchema": { "type": ["object", "null"], "additionalProperties": true },
+        "fixtures": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["path", "sha256", "bytes"],
+            "properties": {
+              "path": { "type": "string" },
+              "sha256": { "type": "string" },
+              "bytes": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "status": { "type": "string", "enum": ["pass", "fail", "error", "skipped"] },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": ["string", "null"] },
+          "status": { "type": "string", "enum": ["pass", "fail", "error", "skipped"] },
+          "durationMs": { "type": ["integer", "null"] },
+          "warnings": { "type": "array", "items": { "type": "string" } },
+          "errors": { "type": "array", "items": { "type": "string" } },
+          "diffs": { "type": "array", "items": { "type": "string" } },
+          "hints": { "type": "array", "items": { "type": "string" } },
+          "comparisons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["path", "mode", "expected", "actual", "ok"],
+              "properties": {
+                "path": { "type": "string" },
+                "mode": { "type": "string" },
+                "ok": { "type": "boolean" },
+                "expected": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": ["sha256", "bytes"],
+                  "properties": {
+                    "sha256": { "type": "string" },
+                    "bytes": { "type": "integer" }
+                  }
+                },
+                "actual": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "required": ["sha256", "bytes"],
+                  "properties": {
+                    "sha256": { "type": "string" },
+                    "bytes": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "summary": { "type": "array", "items": { "type": "string" } },
+    "signature": {
+      "type": ["object", "null"],
+      "additionalProperties": true,
+      "properties": {
+        "algorithm": { "type": "string" },
+        "canonicalization": { "type": ["string", "null"] },
+        "publicKeyB64": { "type": "string" },
+        "signatureB64": { "type": "string" },
+        "signedPayloadSha256": { "type": "string" }
+      }
+    }
+  }
+}

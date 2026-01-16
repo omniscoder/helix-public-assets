@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_studio_outcome_summary_receipt_v2.json",
+  "title": "Helix Studio Outcome Summary Receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "created_at_utc",
+    "receipt_hash",
+    "model_versions",
+    "input",
+    "run",
+    "view",
+    "confidence",
+    "calibration",
+    "limitations",
+    "dag",
+    "summary_sentence"
+  ],
+  "properties": {
+    "schema": {"const": "helix_studio_outcome_summary_receipt_v2"},
+    "created_at_utc": {"type": "string"},
+    "receipt_hash": {"type": "string"},
+    "model_versions": {"type": "object", "additionalProperties": true},
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_digest", "experiment_intent_spec_sha256", "experiment_spec_sha256"],
+      "properties": {
+        "input_digest": {"type": ["string", "null"]},
+        "experiment_intent_spec_sha256": {"type": ["string", "null"]},
+        "experiment_spec_sha256": {"type": ["string", "null"]}
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_kind", "run_id", "run_artifact_hash"],
+      "properties": {
+        "run_kind": {"type": ["string", "null"]},
+        "run_id": {"type": ["integer", "null"]},
+        "run_artifact_hash": {"type": ["string", "null"]}
+      }
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layout", "collapse_threshold_pct", "exact_values", "highlight_dominant_path", "structural_mode"],
+      "properties": {
+        "layout": {"type": ["string", "null"]},
+        "collapse_threshold_pct": {"type": ["number", "null"]},
+        "exact_values": {"type": "boolean"},
+        "highlight_dominant_path": {"type": "boolean"},
+        "structural_mode": {"type": "boolean"}
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "reasons"],
+      "properties": {
+        "level": {"type": "string"},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["badge"],
+      "properties": {
+        "badge": {"type": ["string", "null"]}
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "notes"],
+      "properties": {
+        "url": {"type": ["string", "null"]},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "dag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dag_hash", "artifact_graph_hash", "dominant_leaf_id", "dominant_path", "top_outcomes"],
+      "properties": {
+        "dag_hash": {"type": ["string", "null"]},
+        "artifact_graph_hash": {"type": ["string", "null"]},
+        "dominant_leaf_id": {"type": ["string", "null"]},
+        "dominant_path": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": {
+              "id": {"type": "string"},
+              "stage": {"type": ["string", "null"]},
+              "title": {"type": ["string", "null"]},
+              "role": {"type": ["string", "null"]},
+              "time_step": {"type": ["integer", "null"]},
+              "flow_weight": {"type": ["number", "null"]},
+              "display": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "top_outcomes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "flow_weight", "display"],
+            "properties": {
+              "id": {"type": "string"},
+              "title": {"type": "string"},
+              "flow_weight": {"type": "number"},
+              "display": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "summary_sentence": {"type": ["string", "null"]}
+  }
+}

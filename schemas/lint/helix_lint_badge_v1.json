@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_lint_badge_v1.json",
+  "title": "Helix Lint Badge v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "lint",
+    "status",
+    "errors",
+    "warnings",
+    "policy_id",
+    "policy_hash",
+    "report_path",
+    "report_hash"
+  ],
+  "properties": {
+    "schema": { "const": "helix.lint.badge/v1" },
+    "lint": { "type": "string" },
+    "status": { "type": "string", "enum": ["PASS", "FAIL", "SKIP"] },
+    "errors": { "type": "integer", "minimum": 0 },
+    "warnings": { "type": "integer", "minimum": 0 },
+    "codes": { "type": "array", "items": { "type": "string" } },
+    "policy_id": { "type": ["string", "null"] },
+    "policy_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+    "report_path": { "type": "string" },
+    "report_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+  }
+}
+

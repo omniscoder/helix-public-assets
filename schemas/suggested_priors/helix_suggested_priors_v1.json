@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_suggested_priors_v1.json",
+  "title": "Helix Suggested Priors v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "suggestedId",
+    "derivedFrom",
+    "priors",
+    "rationale",
+    "compatibility"
+  ],
+  "properties": {
+    "schema": {"const": "helix_suggested_priors_v1"},
+    "suggestedId": {"type": "string"},
+    "derivedFrom": {
+      "type": "object",
+      "properties": {
+        "calibrationProfileId": {"type": "string"},
+        "resultsRecordIds": {"type": "array", "items": {"type": "string"}},
+        "scope": {"type": "object"}
+      }
+    },
+    "priors": {
+      "type": "object",
+      "properties": {
+        "cut": {
+          "type": "object",
+          "properties": {
+            "defaultBetaPriorStrength": {"type": "number"},
+            "desiredAlpha0": {"type": "number"},
+            "desiredBeta0": {"type": "number"}
+          }
+        },
+        "prime": {
+          "type": "object",
+          "properties": {
+            "defaultDirichletStrength": {"type": "number"},
+            "alphaByCategory": {"type": "object"}
+          }
+        }
+      }
+    },
+    "rationale": {"type": "array", "items": {"type": "string"}},
+    "compatibility": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modelId": {"type": "string"},
+          "modelVersion": {"type": "string"}
+        }
+      }
+    }
+  }
+}

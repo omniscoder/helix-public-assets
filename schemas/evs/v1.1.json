@@ -1,0 +1,73 @@
+{
+  "$id": "v1.1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-notes": [
+    "v1.1 differences from v1.0: adds sequence.refChecksum, editPlan.constraints, visualization.interactions and layer interactions, pixelRatio explicitly versioned, allows per-layer height."
+  ],
+  "type": "object",
+  "required": ["specVersion", "id", "sequence", "editPlan", "visualization"],
+  "properties": {
+    "specVersion": { "const": "v1.1" },
+    "id": { "type": "string" },
+    "organism": { "type": "object", "additionalProperties": true },
+    "sequence": {
+      "type": "object",
+      "required": ["ref", "referenceLocus"],
+      "properties": {
+        "ref": { "type": "string" },
+        "refChecksum": { "type": "string" },
+        "referenceLocus": {
+          "type": "object",
+          "required": ["chrom", "start", "end"],
+          "properties": {
+            "chrom": { "type": "string" },
+            "start": { "type": "integer" },
+            "end": { "type": "integer" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "editPlan": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string" },
+        "constraints": { "type": "object", "additionalProperties": true },
+        "targets": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      },
+      "additionalProperties": true
+    },
+    "simulation": { "type": "object", "additionalProperties": true },
+    "visualization": {
+      "type": "object",
+      "required": ["layers"],
+      "properties": {
+        "pixelRatio": { "type": "number" },
+        "camera": { "type": "object", "additionalProperties": true },
+        "interactions": { "type": "object", "additionalProperties": true },
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": { "type": "string" },
+              "visible": { "type": "boolean" },
+              "height": { "type": "integer" },
+              "style": { "type": "object", "additionalProperties": true },
+              "interactions": { "type": "object", "additionalProperties": true }
+            },
+            "additionalProperties": true
+          }
+        },
+        "selection": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "metrics": { "type": "object", "additionalProperties": true },
+    "provenance": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

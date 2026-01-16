@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/enzyme/helix_png_provenance_v1.json",
+  "title": "Helix PNG Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "artifact_path",
+    "artifact_sha256",
+    "pixel_digest",
+    "trust",
+    "createdUtc",
+    "engineVersion",
+    "runId",
+    "semanticHash"
+  ],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version"],
+      "properties": {
+        "kind": {"const": "helix.png_provenance"},
+        "version": {"type": "integer", "const": 1}
+      }
+    },
+    "artifact_path": {"type": "string", "minLength": 1},
+    "artifact_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "pixel_digest": {"type": "string", "pattern": "^sha256_pixels:[0-9a-fA-F]{64}$"},
+    "trust": {"type": "string", "enum": ["core_verified", "core_unverified", "plugin_derived", "viz_derived"]},
+    "createdUtc": {"type": "string", "format": "date-time"},
+    "engineVersion": {"type": "string", "minLength": 1},
+    "runId": {"type": "string", "minLength": 1},
+    "semanticHash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+    "policyHash": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+    "policyPath": {"type": ["string", "null"]},
+    "policyName": {"type": ["string", "null"]}
+  }
+}

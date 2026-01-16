@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/run/run_descriptor.schema.json",
+  "title": "RunDescriptor v0.1",
+  "description": "Canonical description of a sequencing or analysis run once it crosses into Omnis/Helix.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "instrument", "routing", "data_products"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "run_descriptor_v0.1"
+    },
+    "instrument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vendor", "model", "vendor_run_id", "data_uri"],
+      "properties": {
+        "vendor": {
+          "type": "string",
+          "enum": ["illumina", "ion_torrent", "thermo_connect", "other"]
+        },
+        "model": {"type": "string"},
+        "serial": {"type": ["string", "null"]},
+        "vendor_run_id": {"type": "string"},
+        "data_uri": {"type": "string"},
+        "run_start_at": {"type": "string", "format": "date-time"},
+        "run_complete_at": {"type": "string", "format": "date-time"},
+        "flowcell_id": {"type": ["string", "null"]},
+        "software_version": {"type": ["string", "null"]}
+      }
+    },
+    "assay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "read_structure": {"type": ["string", "null"], "description": "Compact read structure such as 151T8I151T."},
+        "read_lengths": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 1},
+          "minItems": 1
+        },
+        "chemistry": {"type": ["string", "null"]},
+        "sample_sheet": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source": {"type": ["string", "null"], "description": "Path or URI to original sample sheet"},
+            "records": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["sample_id"],
+                "properties": {
+                  "sample_id": {"type": "string"},
+                  "library_id": {"type": ["string", "null"]},
+                  "project": {"type": ["string", "null"]},
+                  "subject": {"type": ["string", "null"]},
+                  "index_i7": {"type": ["string", "null"]},
+                  "index_i5": {"type": ["string", "null"]},
+                  "description": {"type": ["string", "null"]},
+                  "metadata": {"type": "object", "additionalProperties": true}
+                }
+              }
+            }
+          }
+        },
+        "barcodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sample_id"],
+            "properties": {
+              "sample_id": {"type": "string"},
+              "index_i7": {"type": ["string", "null"]},
+              "index_i5": {"type": ["string", "null"]},
+              "project": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sample_id"],
+        "properties": {
+          "sample_id": {"type": "string"},
+          "library_id": {"type": ["string", "null"]},
+          "project": {"type": ["string", "null"]},
+          "subject": {"type": ["string", "null"]},
+          "metadata": {"type": "object", "additionalProperties": true}
+        }
+      }
+    },
+    "data_products": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fastq_sets"],
+      "properties": {
+        "fastq_sets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sample_id", "read_pair"],
+            "properties": {
+              "sample_id": {"type": "string"},
+              "lane": {"type": ["string", "null"]},
+              "read_pair": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["r1", "r2"],
+                "properties": {
+                  "r1": {"type": "string"},
+                  "r2": {"type": "string"},
+                  "index1": {"type": ["string", "null"]},
+                  "index2": {"type": ["string", "null"]}
+                }
+              },
+              "md5": {"type": ["string", "null"]},
+              "read_group": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "bam": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["uri"],
+            "properties": {
+              "uri": {"type": "string"},
+              "sample_id": {"type": ["string", "null"]},
+              "producer": {"type": ["string", "null"]},
+              "md5": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "vcf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["uri"],
+            "properties": {
+              "uri": {"type": "string"},
+              "sample_id": {"type": ["string", "null"]},
+              "producer": {"type": ["string", "null"]},
+              "md5": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "qc_reports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["uri"],
+            "properties": {
+              "uri": {"type": "string"},
+              "label": {"type": ["string", "null"]},
+              "producer": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pipeline", "reference_build"],
+      "properties": {
+        "pipeline": {
+          "type": "string",
+          "enum": ["bulk_edit", "pooled_screen", "single_cell", "oncology_panel", "generic_align"]
+        },
+        "reference_build": {"type": "string"},
+        "fm_index_id": {"type": ["string", "null"]},
+        "helix_project_id": {"type": ["string", "null"]},
+        "helix_experiment_id": {"type": ["string", "null"]},
+        "priority": {"type": "string", "enum": ["low", "normal", "high"], "default": "normal"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "translated_by": {"type": ["string", "null"], "description": "Translator id/version"},
+        "collected_at": {"type": "string", "format": "date-time"},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "notes": {"type": ["string", "null"]}
+  }
+}

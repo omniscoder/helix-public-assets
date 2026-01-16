@@ -1,0 +1,45 @@
+{
+  "digest": "sha256:d2c890e07d52e9c830b6d37be4e0be34d43280e94968da87cd5b7b53a2156a2d",
+  "entries": [
+    {
+      "path": "helix_enzyme_evidence_v1.json",
+      "sha256": "sha256:e03bc84b605601b2b53e0956b022bad630f33a86f55567e41bf3990844473b3a"
+    },
+    {
+      "path": "helix_enzyme_export_v1.json",
+      "sha256": "sha256:8a1aee2423c2cd88c5ea5188b2992c2c8145ce45168fa6bbc77b35532f967dae"
+    },
+    {
+      "path": "helix_enzyme_ir_v1.json",
+      "sha256": "sha256:d538664d36cdfa269b4317871b4c4d3a4103d80951a64a99b2480431403d1d4b"
+    },
+    {
+      "path": "helix_enzyme_model_semantics_v1.json",
+      "sha256": "sha256:37d311fe911529d8fb72a60dd667a970da32595c33c934465ba462ba126f46cd"
+    },
+    {
+      "path": "helix_enzyme_policy_v1.json",
+      "sha256": "sha256:08abf61068a1adad453bd985bab7983caa05534beee2d9c27ba6f68bdbbc4229"
+    },
+    {
+      "path": "helix_enzyme_schema_digest_v1.json",
+      "sha256": "sha256:111b496bc6bf8a73df86c8a877f8def62bea1ead24021a40a9ba4b20a0458826"
+    },
+    {
+      "path": "helix_enzyme_session_v1.json",
+      "sha256": "sha256:76a224ec05978f0bf5c5e9ae21732ed0e6c8f76bc9acb2ebdb33e404a494a02b"
+    },
+    {
+      "path": "helix_enzyme_simulate_config_v1.json",
+      "sha256": "sha256:d9e503f398f3f133a1ea91879926329ee2585cc3d4825b3c7339e5ab4e037ac4"
+    },
+    {
+      "path": "helix_png_provenance_v1.json",
+      "sha256": "sha256:992b704b1b2fbdfad48e94e7fc3074024c917dcb6f0bf8428d8554b236eb4431"
+    }
+  ],
+  "schema": {
+    "kind": "helix.enzyme.schema_digest",
+    "version": 1
+  }
+}

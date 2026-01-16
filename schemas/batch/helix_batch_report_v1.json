@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_batch_report_v1.json",
+  "title": "Helix Batch Report v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "inputsSha256",
+    "candidates",
+    "isTruncated",
+    "capsUsed",
+    "rankingVersion"
+  ],
+  "properties": {
+    "schema": {"const": "helix_batch_report_v1"},
+    "inputsSha256": {"type": "string"},
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "candidateKey": {"type": "string"},
+          "guide": {"type": "object"},
+          "guides": {"type": "array", "items": {"type": "object"}},
+          "pairKeys": {"type": "array", "items": {"type": "string"}},
+          "cutIndices": {"type": "array", "items": {"type": ["integer", "null"]}},
+          "pairTargets": {"type": "array", "items": {"type": "object"}},
+          "combinedSummary": {"type": "object"},
+          "outcomeSummary": {"type": "object"},
+          "offTargetSummary": {"type": "object"},
+          "clonePlanSummary": {"type": "object"},
+          "assayPlanSummary": {"type": "object"},
+          "assayTargets": {"type": "array", "items": {"type": "object"}},
+          "assayCostScore": {"type": "number"},
+          "primerFeasibilityScore": {"type": "number"},
+          "offtargetValidationCount": {"type": "number"},
+          "totalValidationCost": {"type": "number"},
+          "objectiveVector": {"type": "object"},
+          "topOffTargets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "riskTier": {"type": "string"},
+                "locus": {"type": "string"}
+              }
+            }
+          },
+          "primaryPrimerStatus": {"type": "string"},
+          "primaryPrimerNotes": {"type": "array", "items": {"type": "string"}},
+          "primaryPrimerStatusByTarget": {"type": "object"},
+          "primaryPrimerNotesByTarget": {"type": "object"},
+          "assayRationale": {"type": "array", "items": {"type": "string"}},
+          "assayRationaleByTarget": {"type": "object"},
+          "cutIndex": {"type": ["integer", "null"]},
+          "paretoVector": {"type": "object"},
+          "isPareto": {"type": "boolean"},
+          "paretoFront": {"type": "boolean"},
+          "compositeScore": {"type": "number"}
+        }
+      }
+    },
+    "isTruncated": {"type": "boolean"},
+    "capsUsed": {"type": "object"},
+    "rankingVersion": {"type": "string"},
+    "rankingSpec": {"type": "object"},
+    "paretoFrontKeys": {"type": "array", "items": {"type": "string"}}
+  }
+}

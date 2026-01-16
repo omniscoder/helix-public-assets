@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_metrics_run_v1.json",
+  "title": "Helix Metrics Run v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "run_id",
+    "timestamp",
+    "policy_id",
+    "policy_hash",
+    "verdict",
+    "error_codes",
+    "warning_codes"
+  ],
+  "properties": {
+    "schema": { "const": "helix.metrics.run/v1" },
+    "run_id": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "policy_id": { "type": ["string", "null"] },
+    "policy_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+    "verdict": { "type": "string", "enum": ["PASS", "FAIL"] },
+    "error_codes": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^WLP\\d{3}$" },
+      "uniqueItems": true
+    },
+    "warning_codes": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^WLP\\d{3}$" },
+      "uniqueItems": true
+    }
+  }
+}
+

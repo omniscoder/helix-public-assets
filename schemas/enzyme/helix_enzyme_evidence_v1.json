@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/enzyme/helix_enzyme_evidence_v1.json",
+  "title": "Helix Enzyme Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "header", "evidenceModules"],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version"],
+      "properties": {
+        "kind": {"const": "helix.enzyme.evidence"},
+        "version": {"type": "integer", "const": 1}
+      }
+    },
+    "header": {"$ref": "#/$defs/header"},
+    "evidenceModules": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence_module"}},
+    "candidates": {"type": "array", "items": {"$ref": "#/$defs/candidate_evidence"}}
+  },
+  "$defs": {
+    "header": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "artifactVersion",
+        "runId",
+        "createdUtc",
+        "engineVersion",
+        "policyHash",
+        "policyPath",
+        "policyName",
+        "semanticHash",
+        "backend",
+        "determinismClass",
+        "trust",
+        "trustCheckVersion"
+      ],
+      "properties": {
+        "artifactVersion": {"type": "string"},
+        "runId": {"type": "string"},
+        "createdUtc": {"type": "string", "format": "date-time"},
+        "engineVersion": {"type": "string"},
+        "policyHash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "policyPath": {"type": "string"},
+        "policyName": {"type": "string"},
+        "semanticHash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "backend": {"type": "object"},
+        "determinismClass": {"type": "string", "enum": ["D0", "D1", "D2"]},
+        "trust": {"type": "string", "enum": ["core_verified", "core_unverified", "plugin_derived", "viz_derived"]},
+        "trustCheckVersion": {"type": "string"}
+      }
+    },
+    "evidence_module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "assumptions", "metrics", "artifacts", "uncertainty"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["ok", "fail", "unknown"]},
+        "assumptions": {"type": "object", "additionalProperties": true},
+        "metrics": {"type": "object", "additionalProperties": true},
+        "artifacts": {"type": "array", "items": {"type": "string"}},
+        "uncertainty": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "candidate_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "sequence_sha256", "scores", "flags"],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "sequence_sha256": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "scores": {"type": "object", "additionalProperties": {"type": "number"}},
+        "flags": {"type": "array", "items": {"type": "string"}},
+        "assets": {"type": "object", "additionalProperties": true}
+      }
+    }
+  }
+}

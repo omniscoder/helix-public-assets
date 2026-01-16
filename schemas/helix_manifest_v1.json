@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://helixstudio.dev/schemas/helix_manifest_v1.json",
+  "title": "Helix Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_version",
+    "created_at_utc",
+    "project",
+    "engine",
+    "inputs",
+    "edits",
+    "simulation",
+    "outputs",
+    "provenance"
+  ],
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "created_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "project_id"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "project_id": { "type": "string", "minLength": 8, "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 5000 }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "build"],
+      "properties": {
+        "name": { "type": "string", "const": "helix" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["git_sha", "build_type", "platform"],
+          "properties": {
+            "git_sha": { "type": "string", "minLength": 7, "maxLength": 64 },
+            "build_type": { "type": "string", "enum": ["debug", "release"] },
+            "platform": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["os", "arch"],
+              "properties": {
+                "os": { "type": "string", "minLength": 1, "maxLength": 64 },
+                "arch": { "type": "string", "minLength": 1, "maxLength": 32 },
+                "cuda": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["enabled"],
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "driver_version": { "type": "string", "maxLength": 64 },
+                    "runtime_version": { "type": "string", "maxLength": 64 },
+                    "device_name": { "type": "string", "maxLength": 128 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference_genome"],
+      "properties": {
+        "reference_genome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["uri", "sha256", "format"],
+          "properties": {
+            "uri": { "type": "string", "minLength": 1, "maxLength": 2000 },
+            "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+            "format": { "type": "string", "enum": ["fasta"] },
+            "contigs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "length"],
+                "properties": {
+                  "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+                  "length": { "type": "integer", "minimum": 1 }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "edits": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["edit_id", "kind", "target", "params"],
+        "properties": {
+          "edit_id": { "type": "string", "minLength": 8, "maxLength": 128 },
+          "kind": { "type": "string", "enum": ["snp", "indel", "prime_edit"] },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["contig", "pos_1based"],
+            "properties": {
+              "contig": { "type": "string", "minLength": 1, "maxLength": 128 },
+              "pos_1based": { "type": "integer", "minimum": 1 },
+              "ref_len": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "ref_base": { "type": "string", "pattern": "^[ACGTN]$" },
+              "alt_base": { "type": "string", "pattern": "^[ACGTN]$" },
+              "ins_seq": { "type": "string", "pattern": "^[ACGTN]*$" },
+              "del_len": { "type": "integer", "minimum": 0 },
+              "pegRNA_seq": { "type": "string", "pattern": "^[ACGTN]*$" },
+              "rt_template_seq": { "type": "string", "pattern": "^[ACGTN]*$" },
+              "pbs_len": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "simulation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "seed", "parameters"],
+      "properties": {
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "version": { "type": "string", "minLength": 1, "maxLength": 64 }
+          }
+        },
+        "seed": { "type": "integer", "minimum": 0, "maximum": 18446744073709551615 },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repair_model", "trials"],
+          "properties": {
+            "repair_model": { "type": "string", "enum": ["nhej_abstract", "hdr_abstract", "mixed_abstract"] },
+            "trials": { "type": "integer", "minimum": 1, "maximum": 100000000 },
+            "temperature": { "type": "number" },
+            "notes": { "type": "string", "maxLength": 5000 }
+          }
+        },
+        "determinism": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "guarantee_level": { "type": "string", "enum": ["strict", "best_effort"] },
+            "notes": { "type": "string", "maxLength": 5000 }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifacts"],
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "uri", "sha256"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["manifest", "fasta", "vcf", "report_json"] },
+              "uri": { "type": "string", "minLength": 1, "maxLength": 2000 },
+              "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "num_edits": { "type": "integer", "minimum": 0 },
+            "num_contigs_touched": { "type": "integer", "minimum": 0 },
+            "top_outcomes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["label", "probability"],
+                "properties": {
+                  "label": { "type": "string", "minLength": 1, "maxLength": 200 },
+                  "probability": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "inputs_hash", "edits_hash"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 8, "maxLength": 128 },
+        "inputs_hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "edits_hash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "extra": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

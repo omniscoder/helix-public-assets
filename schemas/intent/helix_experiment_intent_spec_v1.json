@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_experiment_intent_spec_v1.json",
+  "title": "Helix Experiment Intent Spec v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "intentId",
+    "decisionQuestion",
+    "hypothesis",
+    "perturbation",
+    "readout",
+    "decisionRule",
+    "premortem",
+    "snapshots"
+  ],
+  "properties": {
+    "schema": { "const": "helix_experiment_intent_spec_v1" },
+    "intentId": { "type": "string" },
+    "createdAt": { "type": ["string", "null"], "format": "date-time" },
+    "decisionQuestion": { "type": "string" },
+    "hypothesis": { "type": "string" },
+    "perturbation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["modality", "target", "notes"],
+      "properties": {
+        "modality": { "type": "string" },
+        "target": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "readout": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["measurement", "notes"],
+      "properties": {
+        "measurement": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "decisionRule": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["rule", "notes", "threshold", "pattern"],
+      "properties": {
+        "rule": { "type": "string" },
+        "notes": { "type": "string" },
+        "threshold": { "type": ["number", "null"] },
+        "pattern": { "type": ["string", "null"] }
+      }
+    },
+    "premortem": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["failureMode", "dataSignature"],
+        "properties": {
+          "failureMode": { "type": "string" },
+          "dataSignature": { "type": "string" },
+          "mitigation": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "snapshots": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "targetLocusResolution",
+        "guideSet",
+        "offTargetPolicyMode",
+        "assumedCellContext",
+        "analysisPlan"
+      ],
+      "properties": {
+        "targetLocusResolution": { "type": ["object", "null"] },
+        "guideSet": { "type": ["object", "null"] },
+        "offTargetPolicyMode": { "type": ["object", "null"] },
+        "assumedCellContext": { "type": ["object", "null"] },
+        "analysisPlan": { "type": ["object", "null"] }
+      }
+    }
+  }
+}
+

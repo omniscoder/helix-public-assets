@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_base_position_calibration_eval_v1.json",
+  "title": "Helix Base Position Calibration Evaluation v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "profileId",
+    "l1Before",
+    "l1After"
+  ],
+  "properties": {
+    "schema": {"const": "helix_base_position_calibration_eval_v1"},
+    "profileId": {"type": "string"},
+    "resultsRecordIds": {"type": "array", "items": {"type": "string"}},
+    "resultsFingerprintSha256": {"type": "string"},
+    "l1Before": {"type": "number"},
+    "l1After": {"type": "number"},
+    "topDeltas": {"type": "array", "items": {"type": "object"}},
+    "evidenceN": {"type": "integer"},
+    "editableCount": {"type": "integer"},
+    "lowEvidence": {"type": "boolean"},
+    "warningNote": {"type": "string"}
+  }
+}

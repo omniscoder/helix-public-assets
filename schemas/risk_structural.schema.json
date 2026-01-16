@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://helix/schemas/risk_structural.schema.json",
+  "title": "Helix Summary Contract v2 risk.structural",
+  "type": "object",
+  "additionalProperties": true,
+
+  "required": [
+    "schema",
+    "status",
+    "mode",
+    "executed_mode",
+    "scope",
+    "limitations",
+    "params",
+    "break_sites",
+    "event_distribution",
+    "large_deletion_length_bins",
+    "top_inversion_pairs",
+    "top_translocation_pairs",
+    "chrom_pair_masses",
+    "metrics"
+  ],
+
+  "properties": {
+    "schema": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["computed", "not_computed"] },
+
+    "mode": { "type": "string", "enum": ["none", "local_screening", "genome_screening", "full"] },
+    "executed_mode": { "type": "string", "enum": ["none", "local_screening", "genome_screening", "full"] },
+    "scope": { "type": "string", "enum": ["none", "local", "window_only", "genome_wide"] },
+
+    "limitations": { "type": "string", "minLength": 1 },
+    "reason": { "type": ["string", "null"] },
+    "params": { "type": "object" },
+
+    "break_sites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["chrom", "pos", "strand", "cleavageProbabilityProxy", "tags", "source", "mismatchProfile"],
+        "properties": {
+          "chrom": { "type": "string", "minLength": 1 },
+          "pos": { "type": "integer" },
+          "strand": { "type": "string", "enum": ["+", "-"] },
+          "cleavageProbabilityProxy": { "type": "number" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "source": { "type": "string", "minLength": 1 },
+          "mismatchProfile": { "type": "object" }
+        }
+      }
+    },
+
+    "event_distribution": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["no_rearrangement", "large_deletion", "inversion", "translocation", "complex_rearrangement"],
+      "properties": {
+        "no_rearrangement": { "type": "number" },
+        "large_deletion": { "type": "number" },
+        "inversion": { "type": "number" },
+        "translocation": { "type": "number" },
+        "complex_rearrangement": { "type": "number" }
+      }
+    },
+
+    "large_deletion_length_bins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["start_bp", "end_bp", "probability"],
+        "properties": {
+          "start_bp": { "type": "integer", "minimum": 1 },
+          "end_bp": { "type": ["integer", "null"] },
+          "probability": { "type": "number" }
+        }
+      }
+    },
+
+    "top_inversion_pairs": { "type": "array" },
+    "top_translocation_pairs": { "type": "array" },
+    "chrom_pair_masses": { "type": "array" },
+    "metrics": { "type": "object" }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "executed_mode": { "const": "none" } }, "required": ["executed_mode"] },
+      "then": { "properties": { "scope": { "const": "none" } } }
+    }
+  ]
+}
+

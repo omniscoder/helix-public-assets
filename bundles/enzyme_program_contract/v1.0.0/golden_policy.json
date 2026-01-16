@@ -1,0 +1,9 @@
+{
+  "schema": {"kind": "helix.enzyme.policy", "version": 1},
+  "policyName": "enzyme-audit-strict-v1",
+  "policyVersion": "1.0.0",
+  "requiredEvidence": ["E_SEQ_001", "E_CELLFREE_001", "E_UNC_001"],
+  "thresholds": {},
+  "allowedRegimes": ["aq_buffer_25C"],
+  "determinismRequirements": {"cpu": ["D0", "D1"]}
+}

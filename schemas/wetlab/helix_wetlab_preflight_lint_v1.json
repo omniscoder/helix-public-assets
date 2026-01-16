@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_wetlab_preflight_lint_v1.json",
+  "title": "Helix Wet Lab Preflight Lint v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "header",
+    "schema",
+    "schema_version",
+    "enabled",
+    "generated_at_utc",
+    "policy_id",
+    "policy_hash",
+    "verdict",
+    "fail_count",
+    "warn_count",
+    "ok",
+    "findings"
+  ],
+  "properties": {
+    "header": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["policyHash", "semanticHash", "determinismClass", "runId", "createdUtc"],
+      "properties": {
+        "policyHash": { "type": "string" },
+        "semanticHash": { "type": "string" },
+        "determinismClass": { "type": "string" },
+        "runId": { "type": "string" },
+        "createdUtc": { "type": "string" }
+      }
+    },
+    "schema": { "const": "helix_wetlab_preflight_lint_v1" },
+    "schema_version": { "type": "string", "const": "1" },
+    "enabled": { "type": "boolean" },
+    "generated_at_utc": { "type": "string", "format": "date-time" },
+    "policy_id": { "type": ["string", "null"] },
+    "policy_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+    "verdict": { "type": "string", "enum": ["pass", "fail"] },
+    "fail_count": { "type": "integer", "minimum": 0 },
+    "warn_count": { "type": "integer", "minimum": 0 },
+    "ok": { "type": "boolean" },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    }
+  },
+  "$defs": {
+    "evidence_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "path_hint", "minimal_fields", "policy_gate"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "path_hint": { "type": ["string", "null"] },
+        "path_candidates": { "type": "array", "items": { "type": "string" } },
+        "source": {
+          "type": ["string", "null"],
+          "enum": ["helixspec", "policy", "session_config", "run_context", null]
+        },
+        "autofillable": { "type": "boolean" },
+        "minimal_fields": { "type": ["object", "null"], "additionalProperties": true },
+        "policy_gate": { "type": ["string", "null"] }
+      }
+    },
+    "auto_fix_hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "path_hint", "patch"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "path_hint": { "type": ["string", "null"] },
+        "patch": { "type": ["object", "null"], "additionalProperties": true }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "symbol",
+        "message",
+        "evidence_required",
+        "policy_clause",
+        "path",
+        "auto_fix_hints"
+      ],
+      "properties": {
+        "code": { "type": "string", "pattern": "^WLP\\d{3}$" },
+        "severity": { "type": "string", "enum": ["error", "warn"] },
+        "symbol": { "type": ["string", "null"] },
+        "message": { "type": "string" },
+        "evidence_required": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence_requirement" }
+        },
+        "policy_clause": { "type": "string" },
+        "path": { "type": ["string", "null"] },
+        "auto_fix_hints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/auto_fix_hint" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "helix.public_assets.index.v1",
+  "hash_algorithm": "sha256",
+  "sha256sums": [
+    {
+      "path": "schemas/SHA256SUMS.txt",
+      "sha256": "7511cc9a2cfe214b7bb24c85cb00606ec1afc25baad94e174c79271a04132fe2"
+    },
+    {
+      "path": "contracts/SHA256SUMS.txt",
+      "sha256": "73d61fe09291cf1df0a3677df947d499ad82803a4cf985fae6b6633b8159af71"
+    },
+    {
+      "path": "bundles/enzyme_program_contract/v1.0.0/SHA256SUMS.txt",
+      "sha256": "e878b902842c56e6d489e7367b053d9ea647badf10b0bb5fe499befb962b6b09"
+    },
+    {
+      "path": "bundles/helix_demo/v1.1.5/crispr/SHA256SUMS.txt",
+      "sha256": "5ba6288c52fe923e11a84035ba547a410aaaa0487b7bd2cf29bfb329d9af6401"
+    },
+    {
+      "path": "bundles/helix_demo/v1.1.5/prime/SHA256SUMS.txt",
+      "sha256": "49407b1b3e61b1726a6feb57862a07387edca92346b1decd1978961d01a1d15c"
+    }
+  ],
+  "bundles": [
+    {
+      "id": "enzyme_program_contract_v1.0.0_golden",
+      "contract": "Enzyme Program Contract v1.0.0",
+      "path": "bundles/enzyme_program_contract/v1.0.0/golden_bundle.zip",
+      "zip_sha256": "128cc7cf832fbef2d3723c96bef662ee29221cfb3a147f0528ae95546143441e",
+      "bundle_sha256": "669d81dd53c7fdd8d67d7438b217aa850974fa75ed71d03684f1b11a329c0899",
+      "bundle_sha256_anchor_file": "bundles/enzyme_program_contract/v1.0.0/golden_bundle.zip.sha256"
+    },
+    {
+      "id": "helix_demo_crispr_v1.1.5",
+      "contract": "Helix demo bundle (CRISPR)",
+      "path": "bundles/helix_demo/v1.1.5/crispr/demo_crispr_bundle.zip",
+      "zip_sha256": "8dc0bfd19e3c9271bfda880354a19b1dc1e6b10a7e7352c9a9575453cfcd9516",
+      "bundle_sha256": "7cfd034750a72cc280adebe4bcd27aa4fc802b2e60e8d0e00c40d677a88623a3",
+      "bundle_sha256_anchor_file": "bundles/helix_demo/v1.1.5/crispr/demo_crispr_bundle.zip.sha256"
+    },
+    {
+      "id": "helix_demo_prime_v1.1.5",
+      "contract": "Helix demo bundle (Prime)",
+      "path": "bundles/helix_demo/v1.1.5/prime/demo_prime_bundle.zip",
+      "zip_sha256": "64cf6fae63c9f023e34970dfb267962ac655dd84cb22eeafd9bea4f6478c885c",
+      "bundle_sha256": "7c5eacbba364f51da83480fc3aa9bb00691b99b2374f27ab7751dd257c02ebc6",
+      "bundle_sha256_anchor_file": "bundles/helix_demo/v1.1.5/prime/demo_prime_bundle.zip.sha256"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_primer_plan_v1.json",
+  "title": "Helix Primer Plan v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "validationPlanSha256",
+    "primerPairs"
+  ],
+  "properties": {
+    "schema": {"const": "helix_primer_plan_v1"},
+    "validationPlanSha256": {"type": "string"},
+    "primerPairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {"type": "string"},
+          "hitKey": {"type": "string"},
+          "contig": {"type": "string"},
+          "targetStart": {"type": "integer"},
+          "targetEnd": {"type": "integer"},
+          "ampliconStart": {"type": ["integer", "null"]},
+          "ampliconEnd": {"type": ["integer", "null"]},
+          "ampliconLength": {"type": ["integer", "null"]},
+          "forwardPrimer": {"type": ["string", "null"]},
+          "reversePrimer": {"type": ["string", "null"]},
+          "status": {"type": ["string", "null"]},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

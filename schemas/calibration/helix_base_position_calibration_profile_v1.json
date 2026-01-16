@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_base_position_calibration_profile_v1.json",
+  "title": "Helix Base Position Calibration Profile v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "profileId",
+    "scope",
+    "window",
+    "derivedFrom",
+    "positionScale",
+    "notes"
+  ],
+  "properties": {
+    "schema": {"const": "helix_base_position_calibration_profile_v1"},
+    "profileId": {"type": "string"},
+    "scope": {
+      "type": "object",
+      "properties": {
+        "editorType": {"type": "string"},
+        "cellLine": {"type": "string"},
+        "delivery": {"type": "string"}
+      }
+    },
+    "window": {
+      "type": "object",
+      "properties": {
+        "start": {"type": "integer"},
+        "end": {"type": "integer"}
+      }
+    },
+    "derivedFrom": {
+      "type": "object",
+      "properties": {
+        "resultsRecordIds": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "positionScale": {"type": "object"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

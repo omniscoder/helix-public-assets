@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_calibration_profile_v1.json",
+  "title": "Helix Calibration Profile v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "profileId",
+    "scope",
+    "sourceResults",
+    "effectiveSampleSizePolicy",
+    "parameters",
+    "notes"
+  ],
+  "properties": {
+    "schema": {"const": "helix_calibration_profile_v1"},
+    "profileId": {"type": "string"},
+    "scope": {
+      "type": "object",
+      "properties": {
+        "modality": {"type": "string", "enum": ["cut", "prime"]},
+        "cellLine": {"type": "string"},
+        "delivery": {"type": "string"},
+        "nuclease": {"type": "string"}
+      }
+    },
+    "sourceResults": {"type": "array", "items": {"type": "string"}},
+    "effectiveSampleSizePolicy": {
+      "type": "object",
+      "properties": {
+        "defaultN": {"type": "number"},
+        "assayOverrides": {"type": "object"},
+        "caps": {"type": "object"}
+      }
+    },
+    "parameters": {"type": "object"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

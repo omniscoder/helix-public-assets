@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_results_record_v1.json",
+  "title": "Helix Results Record v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "resultsId",
+    "modality"
+  ],
+  "properties": {
+    "schema": {"const": "helix_results_record_v1"},
+    "resultsId": {"type": "string"},
+    "linkedExperimentId": {"type": "string"},
+    "sessionId": {"type": "string"},
+    "modality": {"type": "string", "enum": ["cut", "prime", "base"]},
+    "conditions": {"type": "object"},
+    "primaryTarget": {
+      "type": "object",
+      "properties": {
+        "observedDesiredFrequency": {"type": "number"},
+        "observedPositionProbs": {
+          "type": "array",
+          "items": {"type": "object"}
+        },
+        "observedAlleleSpectrum": {
+          "type": "array",
+          "items": {"type": "object"}
+        }
+      }
+    },
+    "offTargetsObserved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "hitKey": {"type": "string"},
+          "observedEditDetected": {"type": "boolean"},
+          "observedFrequency": {"type": "number"}
+        }
+      }
+    },
+    "assayMetadata": {
+      "type": "object",
+      "properties": {
+        "assayType": {"type": "string"},
+        "ampliconLength": {"type": "number"},
+        "readDepth": {"type": "number"}
+      }
+    },
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_outcome_posterior_v1.json",
+  "title": "Helix Outcome Posterior v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "generated_at", "model", "distribution", "calibration", "off_target", "evidence_trace"],
+  "properties": {
+    "schema": {"const": "helix_outcome_posterior_v1"},
+    "generated_at": {"type": "string"},
+    "model": {
+      "type": "object",
+      "required": ["id", "version", "kind"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "kind": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "distribution": {
+      "type": "object",
+      "required": ["outcomes", "entropy_bits", "failure_mass", "tail_mass", "total_probability", "integrity"],
+      "properties": {
+        "outcomes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/outcome"}
+        },
+        "entropy_bits": {"type": "number"},
+        "failure_mass": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "tail_mass": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "total_probability": {"type": "number"},
+        "truncation": {"$ref": "#/$defs/truncation"},
+        "integrity": {"$ref": "#/$defs/integrity"}
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "required": ["status", "score"],
+      "properties": {
+        "status": {"type": "string"},
+        "score": {"type": ["number", "null"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "off_target": {"$ref": "#/$defs/offTargetBurden"},
+    "edit_spec": {"type": "object"},
+    "context": {"type": "object"},
+    "evidence": {"$ref": "#/$defs/evidenceBundle"},
+    "evidence_trace": {"$ref": "#/$defs/evidenceTrace"},
+    "planner_trace": {"$ref": "#/$defs/plannerTrace"}
+  },
+  "$defs": {
+    "outcome": {
+      "type": "object",
+      "required": ["label", "probability"],
+      "properties": {
+        "label": {"type": "string"},
+        "probability": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "category": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "metadata": {"type": "object"}
+      }
+    },
+    "truncation": {
+      "type": "object",
+      "required": ["top_k", "tail_label", "tail_count"],
+      "properties": {
+        "top_k": {"type": "integer", "minimum": 1},
+        "tail_label": {"type": "string"},
+        "tail_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["warnings", "failures"],
+      "properties": {
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "failures": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "credibleInterval": {
+      "type": "object",
+      "required": ["mean", "lower", "upper"],
+      "properties": {
+        "mean": {"type": "number"},
+        "lower": {"type": "number"},
+        "upper": {"type": "number"},
+        "level": {"type": "number"}
+      }
+    },
+    "tailRisk": {
+      "type": "object",
+      "required": ["metric", "value"],
+      "properties": {
+        "metric": {"type": "string"},
+        "value": {"type": ["number", "null"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "offTargetBurden": {
+      "type": "object",
+      "required": ["status", "executed_mode", "calibration_status"],
+      "properties": {
+        "status": {"type": "string"},
+        "executed_mode": {"type": "string"},
+        "calibration_status": {"type": "string"},
+        "reason": {"type": "string"},
+        "provider_id": {"type": "string"},
+        "expected_cuts": {"$ref": "#/$defs/credibleInterval"},
+        "tail_risk": {"$ref": "#/$defs/tailRisk"}
+      }
+    },
+    "evidenceSpec": {
+      "type": "object",
+      "required": ["type", "source"],
+      "properties": {
+        "type": {"type": "string"},
+        "source": {"type": "string"},
+        "evidence_id": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "evidenceBundle": {
+      "type": "object",
+      "required": ["spec", "observed_outcomes"],
+      "properties": {
+        "spec": {"$ref": "#/$defs/evidenceSpec"},
+        "observed_outcomes": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "evidenceTrace": {
+      "type": "object",
+      "required": ["status", "reason"],
+      "properties": {
+        "status": {"type": "string"},
+        "reason": {"type": "string"},
+        "notes": {"type": "string"},
+        "prior_summary": {"type": "object"},
+        "observed_summary": {"type": "object"},
+        "posterior_summary": {"type": "object"},
+        "delta_metrics": {"type": "object"}
+      }
+    },
+    "plannerCandidate": {
+      "type": "object",
+      "required": ["assay", "kind", "effective_reads", "expected_information_gain_bits"],
+      "properties": {
+        "assay": {"type": "string"},
+        "kind": {"type": "string"},
+        "effective_reads": {"type": "integer", "minimum": 0},
+        "expected_information_gain_bits": {"type": "number"}
+      }
+    },
+    "plannerTrace": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "planner_version",
+        "status",
+        "objective",
+        "reason",
+        "note",
+        "inputs_hash",
+        "posterior_hash",
+        "candidates_hash",
+        "ranked_candidates"
+      ],
+      "properties": {
+        "planner_version": {"type": "string"},
+        "status": {"type": "string"},
+        "objective": {"type": "string"},
+        "reason": {"type": "string"},
+        "recommendation_reason": {"type": "string"},
+        "note": {"type": "string"},
+        "inputs_hash": {"type": "string"},
+        "posterior_hash": {"type": "string"},
+        "candidates_hash": {"type": "string"},
+        "prior_entropy_bits": {"type": "number"},
+        "ranked_candidates": {"type": "array", "items": {"$ref": "#/$defs/plannerCandidate"}},
+        "top_choice": {"$ref": "#/$defs/plannerCandidate"},
+        "target": {"type": "object"},
+        "error": {"type": "string"}
+      }
+    }
+  }
+}

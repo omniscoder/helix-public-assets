@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://helixstudio.dev/schemas/rloks/rloks_pack_manifest_v1.json",
+  "title": "RLoCKS Pack Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "packs", "aliases"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "rloks_pack_manifest_v1"
+    },
+    "packs": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[A-Za-z0-9_.-]+:[0-9A-Za-z._+-]+$": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["file", "sha256_file"],
+          "properties": {
+            "file": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^.+\\.json$"
+            },
+            "sha256_file": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^.+\\.json\\.sha256$"
+            }
+          }
+        }
+      }
+    },
+    "aliases": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.+$": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+:[0-9A-Za-z._+-]+$"
+        }
+      }
+    }
+  }
+}

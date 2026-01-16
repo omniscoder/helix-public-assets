@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/outputs/gate0.schema.json",
+  "title": "Gate0Outputs v0",
+  "description": "Gate 0 outputs: exploratory-only. Probabilities are not representable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "gate_level", "outcome_value_label", "outcomes"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "gate0_v0"},
+    "gate_level": {"type": "integer", "const": 0},
+    "outcome_value_label": {"type": "string", "const": "score"},
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["outcome_id", "score", "rank"],
+        "properties": {
+          "outcome_id": {"type": "string", "minLength": 1},
+          "rank": {"type": "integer", "minimum": 1},
+          "score": {"type": "number"},
+          "label": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}
+

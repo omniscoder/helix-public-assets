@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_batch_spec_v1.json",
+  "title": "Helix Batch Spec v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "reference",
+    "nuclease",
+    "candidateSettings",
+    "caps",
+    "ranking"
+  ],
+  "properties": {
+    "schema": {"const": "helix_batch_spec_v1"},
+    "reference": {
+      "type": "object",
+      "properties": {
+        "contig": {"type": "string"},
+        "windowStart": {"type": "integer"},
+        "windowEnd": {"type": "integer"},
+        "windowSha256": {"type": "string"}
+      }
+    },
+    "nuclease": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "pamPattern": {"type": "string"}
+      }
+    },
+    "constraints": {"type": "object"},
+    "candidateSettings": {
+      "type": "object",
+      "properties": {
+        "guideLength": {"type": "integer"},
+        "pamPattern": {"type": "string"},
+        "strandPolicy": {"type": "string"},
+        "pairMode": {"type": "boolean"},
+        "pairTopN": {"type": "integer"}
+      }
+    },
+    "caps": {
+      "type": "object",
+      "properties": {
+        "maxCandidates": {"type": "integer"},
+        "maxOffTargetHits": {"type": "integer"},
+        "maxMismatches": {"type": "integer"},
+        "maxPairs": {"type": "integer"}
+      }
+    },
+    "ranking": {
+      "type": "object",
+      "properties": {
+        "version": {"type": "string"},
+        "weights": {"type": "object"},
+        "objectives": {"type": "array", "items": {"type": "string"}},
+        "tieBreak": {"type": "string"},
+        "normalization": {"type": "object"}
+      }
+    },
+    "experimentSpec": {"type": "object"}
+  }
+}

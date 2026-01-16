@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "species_detection_v1.json",
+  "title": "Species Detection v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "created_at_utc",
+    "db_bundle_id",
+    "db_bundle_hash",
+    "params",
+    "backend",
+    "inputs",
+    "sketch",
+    "hypotheses",
+    "resolution"
+  ],
+  "properties": {
+    "schema": {"const": "species_detection_v1"},
+    "created_at_utc": {"type": "string"},
+    "db_bundle_id": {"type": "string"},
+    "db_bundle_hash": {"type": "string"},
+    "artifact_hash": {"type": "string"},
+    "params": {"type": "object"},
+    "backend": {"type": "object"},
+    "inputs": {"type": "object"},
+    "sketch": {"type": "object"},
+    "methods": {"type": "object"},
+    "hypotheses": {"type": "array"},
+    "genus_hypotheses": {"type": "array"},
+    "resolution": {"type": "object"},
+    "novelty": {"type": "object"},
+    "blocking_issues": {"type": "array"}
+  }
+}

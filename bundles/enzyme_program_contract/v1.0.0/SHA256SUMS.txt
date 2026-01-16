@@ -1,0 +1,6 @@
+cbd9631ae09483ff109c6fa4bef21e7d579b348b551989bc556f47f7161609ce  ./README.md
+af2a18535096f65636bc22d096ce373ba309c385a4633d0a7aa755df8e0a1ee2  ./RELEASE_NOTES_enzyme-contract-v1.0.0.md
+128cc7cf832fbef2d3723c96bef662ee29221cfb3a147f0528ae95546143441e  ./golden_bundle.zip
+caa8affa49f210773809a12e0ae7bfe7095acb43d8cfc26dea069ba45d0bb7e4  ./golden_bundle.zip.sha256
+672c05f201d72f9308e8cafbac2edeae6bab4c8720ba47e61abef6e68c5552b0  ./golden_config.json
+48591ff580cec3af481b4e539e5b1601865ab213cf2542c6aa98dd3922564eb7  ./golden_policy.json

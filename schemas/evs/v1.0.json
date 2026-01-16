@@ -1,0 +1,64 @@
+{
+  "$id": "v1.0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["specVersion", "id", "sequence", "editPlan", "visualization"],
+  "properties": {
+    "specVersion": { "const": "v1.0" },
+    "id": { "type": "string" },
+    "organism": { "type": "object", "additionalProperties": true },
+    "sequence": {
+      "type": "object",
+      "required": ["ref", "referenceLocus"],
+      "properties": {
+        "ref": { "type": "string" },
+        "referenceLocus": {
+          "type": "object",
+          "required": ["chrom", "start", "end"],
+          "properties": {
+            "chrom": { "type": "string" },
+            "start": { "type": "integer" },
+            "end": { "type": "integer" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "editPlan": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string" },
+        "targets": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      },
+      "additionalProperties": true
+    },
+    "simulation": { "type": "object", "additionalProperties": true },
+    "visualization": {
+      "type": "object",
+      "required": ["layers"],
+      "properties": {
+        "pixelRatio": { "type": "number" },
+        "camera": { "type": "object", "additionalProperties": true },
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": { "type": "string" },
+              "visible": { "type": "boolean" },
+              "style": { "type": "object", "additionalProperties": true }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "metrics": { "type": "object", "additionalProperties": true },
+    "provenance": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

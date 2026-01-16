@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://helix/schemas/risk_off_target.schema.json",
+  "title": "Helix Summary Contract v2 risk.off_target",
+  "type": "object",
+  "additionalProperties": true,
+
+  "required": [
+    "status",
+    "mode",
+    "executed_mode",
+    "scope",
+    "provider_id",
+    "reference_id",
+    "params",
+    "limitations",
+    "annotation_computed",
+    "top_sites"
+  ],
+
+  "properties": {
+    "status": { "type": "string", "enum": ["computed", "not_computed"] },
+
+    "mode": { "type": "string", "enum": ["none", "screening", "full"] },
+    "executed_mode": { "type": "string", "enum": ["none", "screening", "full"] },
+
+    "scope": { "type": "string", "enum": ["none", "window_only", "genome_wide"] },
+
+    "provider_id": { "type": "string", "minLength": 1 },
+    "reference_id": { "type": "string", "minLength": 1 },
+
+    "params": { "type": "object" },
+    "limitations": { "type": "string", "minLength": 1 },
+
+    "annotation_computed": { "type": "boolean" },
+
+    "top_sites": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["locus", "mismatches", "pam", "score", "annotation"],
+            "properties": {
+                "locus": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "required": ["chrom", "pos", "strand"],
+                    "properties": {
+                        "chrom": { "type": "string", "minLength": 1 },
+                        "pos": { "type": "integer" },
+                        "strand": { "type": "string", "enum": ["+", "-"] }
+                    }
+                },
+                "mismatches": { "type": "integer", "minimum": 0 },
+                "pam": { "type": "string", "minLength": 1 },
+                "score": { "type": "number" },
+                "annotation": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "required": ["status"],
+                    "properties": {
+                        "status": { "type": "string", "enum": ["computed", "not_computed"] },
+                        "tags": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "executed_mode": { "const": "none" } }, "required": ["executed_mode"] },
+      "then": { "properties": { "scope": { "const": "none" } } }
+    },
+    {
+      "if": { "properties": { "executed_mode": { "const": "screening" } }, "required": ["executed_mode"] },
+      "then": { "properties": { "scope": { "const": "window_only" } } }
+    },
+    {
+      "if": { "properties": { "executed_mode": { "const": "full" } }, "required": ["executed_mode"] },
+      "then": { "properties": { "scope": { "const": "genome_wide" } } }
+    },
+
+    {
+      "if": { "properties": { "annotation_computed": { "const": false } }, "required": ["annotation_computed"] },
+      "then": {
+        "properties": {
+          "top_sites": {
+            "items": {
+              "properties": {
+                "annotation": {
+                  "properties": { "status": { "const": "not_computed" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    {
+      "if": { "properties": { "annotation_computed": { "const": true } }, "required": ["annotation_computed"] },
+      "then": {
+        "properties": {
+          "top_sites": {
+            "items": {
+              "properties": {
+                "annotation": {
+                  "properties": {
+                    "tags": {
+                      "not": {
+                        "contains": { "const": "annotation_not_computed" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

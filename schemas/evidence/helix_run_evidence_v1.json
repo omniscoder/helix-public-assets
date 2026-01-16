@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_run_evidence_v1.json",
+  "title": "Helix Run Evidence v1",
+  "type": "object",
+  "required": ["schema", "run", "outcomes"],
+  "properties": {
+    "schema": {"const": "helix_run_evidence_v1"},
+    "evidence_id": {"type": "string"},
+    "helix_version": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "include_sequence": {"type": "boolean"},
+    "snapshot_sha256": {"type": "string"},
+    "run": {
+      "type": "object",
+      "properties": {
+        "run_id": {"type": ["string", "number"]},
+        "run_label": {"type": "string"},
+        "kind": {"type": "string"},
+        "guide_id": {"type": ["string", "null"]},
+        "target_locus": {"type": ["string", "null"]},
+        "outcomes": {"type": "integer"},
+        "preset_id": {"type": ["string", "null"]}
+      }
+    },
+    "genome": {
+      "type": "object",
+      "properties": {
+        "id": {"type": ["string", "null"]},
+        "sequence": {"type": ["string", "null"]},
+        "sequence_hash": {"type": ["string", "null"]},
+        "length": {"type": ["number", "null"]},
+        "include_sequence": {"type": "boolean"}
+      }
+    },
+    "outcomes": {"type": "array"},
+    "preset": {"type": ["object", "null"]},
+    "physics": {"type": ["object", "null"]},
+    "checksums": {
+      "type": "object",
+      "properties": {
+        "payload_sha256": {"type": "string"},
+        "snapshot_sha256": {"type": "string"}
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_metrics_summary_v1.json",
+  "title": "Helix Metrics Summary v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "window",
+    "policy_id",
+    "total_linted",
+    "blocked",
+    "structurally_non_interpretable",
+    "top_failure_modes",
+    "estimated_avoided_cost_usd",
+    "estimated_time_saved_days"
+  ],
+  "properties": {
+    "schema": { "const": "helix.metrics.summary/v1" },
+    "window": { "type": "string" },
+    "policy_id": { "type": "string" },
+    "total_linted": { "type": "integer", "minimum": 0 },
+    "blocked": { "type": "integer", "minimum": 0 },
+    "structurally_non_interpretable": { "type": "integer", "minimum": 0 },
+    "top_failure_modes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/failure_mode_count" }
+    },
+    "estimated_avoided_cost_usd": { "$ref": "#/$defs/range_int" },
+    "estimated_time_saved_days": { "$ref": "#/$defs/range_int" }
+  },
+  "$defs": {
+    "range_int": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "type": "integer", "minimum": 0 },
+        "max": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "failure_mode_count": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "count"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^WLP\\d{3}$" },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_validation_plan_v1.json",
+  "title": "Helix Validation Plan v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "offTargetReportSha256",
+    "summary",
+    "topHits"
+  ],
+  "properties": {
+    "schema": {"const": "helix_validation_plan_v1"},
+    "offTargetReportSha256": {"type": "string"},
+    "summary": {"type": "array", "items": {"type": "string"}},
+    "highRiskCount": {"type": ["integer", "null"]},
+    "mediumRiskCount": {"type": ["integer", "null"]},
+    "lowRiskCount": {"type": ["integer", "null"]},
+    "hitCap": {"type": ["integer", "null"]},
+    "windowRadius": {"type": ["integer", "null"]},
+    "topHits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "rank": {"type": "integer"},
+          "hitKey": {"type": "string"},
+          "contig": {"type": "string"},
+          "start": {"type": "integer"},
+          "end": {"type": "integer"},
+          "strand": {"type": "string"},
+          "riskTier": {"type": "string"},
+          "riskScore": {"type": "number"},
+          "totalMismatchCount": {"type": "integer"},
+          "seedMismatchCount": {"type": "integer"},
+          "pamClass": {"type": "string"},
+          "recommendedAmpliconWindow": {
+            "type": "object",
+            "properties": {
+              "start": {"type": "integer"},
+              "end": {"type": "integer"}
+            }
+          },
+          "recommendedAssays": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "primaryTarget": {
+      "type": ["object", "null"],
+      "additionalProperties": true,
+      "properties": {
+        "hitKey": {"type": "string"},
+        "contig": {"type": "string"},
+        "start": {"type": "integer"},
+        "end": {"type": "integer"},
+        "strand": {"type": "string"},
+        "recommendedAmpliconWindow": {
+          "type": "object",
+          "properties": {
+            "start": {"type": "integer"},
+            "end": {"type": "integer"}
+          }
+        },
+        "notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "globalGuidance": {"type": "array", "items": {"type": "string"}}
+  }
+}

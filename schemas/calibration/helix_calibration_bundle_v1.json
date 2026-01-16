@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_calibration_bundle_v1.json",
+  "title": "Helix Calibration Bundle v1",
+  "description": "Self-contained heldout calibration report for a scalar prediction (pred) vs observed frequency (obs).",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "bundle_id",
+    "created_at_utc",
+    "provenance",
+    "model",
+    "datasets",
+    "evaluation",
+    "heldout_summary",
+    "bundle_hash"
+  ],
+  "properties": {
+    "schema": {"const": "helix.calibration.bundle/v1"},
+    "bundle_id": {"type": "string", "minLength": 1},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "bundle_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["helix_version", "git_commit", "evaluation_code_hash"],
+      "properties": {
+        "helix_version": {"type": "string"},
+        "git_commit": {"type": "string"},
+        "evaluation_code_hash": {"type": "string"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["model_id", "model_version", "model_hash"],
+      "properties": {
+        "model_id": {"type": "string", "minLength": 1},
+        "model_version": {"type": "string", "minLength": 1},
+        "model_hash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+      }
+    },
+    "datasets": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["calibration_dataset", "heldout_dataset"],
+      "properties": {
+        "calibration_dataset": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["id", "checksum"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "checksum": {"type": "string", "minLength": 1}
+          }
+        },
+        "heldout_dataset": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["id", "checksum"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "checksum": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["bins", "curves", "metrics"],
+      "properties": {
+        "bins": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["count"],
+          "properties": {"count": {"type": "integer", "minimum": 2}}
+        },
+        "curves": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["bin_lo", "bin_hi", "n", "pred_mean", "obs_mean"],
+              "properties": {
+                "bin_lo": {"type": "number"},
+                "bin_hi": {"type": "number"},
+                "n": {"type": "integer", "minimum": 0},
+                "pred_mean": {"type": ["number", "null"]},
+                "obs_mean": {"type": ["number", "null"]}
+              }
+            }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "n": {"type": ["integer", "null"], "minimum": 0},
+              "pearson_r": {"type": ["number", "null"]},
+              "rmse": {"type": ["number", "null"]},
+              "mae": {"type": ["number", "null"]},
+              "bias": {"type": ["number", "null"]},
+              "ece": {"type": ["number", "null"]},
+              "mce": {"type": ["number", "null"]},
+              "brier": {"type": ["number", "null"]},
+              "log_loss": {"type": ["number", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "heldout_summary": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["metrics"],
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "grade_correlation": {"type": ["number", "null"]},
+            "rmse": {"type": ["number", "null"]},
+            "mae": {"type": ["number", "null"]},
+            "ece": {"type": ["number", "null"]},
+            "mce": {"type": ["number", "null"]},
+            "brier": {"type": ["number", "null"]},
+            "log_loss": {"type": ["number", "null"]}
+          }
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional declaration of the scalar target being calibrated (what pred/obs mean).",
+      "properties": {
+        "target_id": {"type": "string"},
+        "description": {"type": "string"},
+        "label_definition_hash": {"type": "string"},
+        "measurement_basis": {"type": "string"},
+        "unit": {"type": "string"}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional declarative coverage/validity envelope (e.g., nuclease, context, assay assumptions)."
+    }
+  }
+}

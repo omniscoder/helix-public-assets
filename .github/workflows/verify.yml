@@ -1,0 +1,63 @@
+name: Verify Public Assets
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tests (stdlib only)
+        run: |
+          python -m unittest discover -s tests
+      - name: Verify repo integrity
+        run: |
+          python tools/verify_repo.py
+      - name: Enforce immutability (PRs)
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          git fetch --no-tags origin "${base_ref}:${base_ref}"
+          diff="$(git diff --name-status "${base_ref}...HEAD")"
+          echo "$diff"
+
+          fail=0
+          while IFS=$'\t' read -r status path1 path2; do
+            [ -n "${status:-}" ] || continue
+            case "$status" in
+              M|D)
+                path="$path1"
+                ;;
+              R*)
+                path="$path2"
+                ;;
+              *)
+                continue
+                ;;
+            esac
+
+            if [[ "$path" == schemas/* && "$path" != schemas/SHA256SUMS.txt ]]; then
+              echo "ERROR: immutable schema modified: $path" >&2
+              fail=1
+            fi
+            if [[ "$path" == contracts/* && "$path" != contracts/SHA256SUMS.txt ]]; then
+              echo "ERROR: immutable contract modified: $path" >&2
+              fail=1
+            fi
+            if [[ "$path" == bundles/* && "$path" != */SHA256SUMS.txt ]]; then
+              echo "ERROR: immutable bundle asset modified: $path" >&2
+              fail=1
+            fi
+          done <<< "$diff"
+
+          exit "$fail"
+

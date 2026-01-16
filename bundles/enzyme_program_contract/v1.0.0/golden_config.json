@@ -1,0 +1,31 @@
+{
+  "schema": {"kind": "helix.enzyme.simulate_config", "version": 1},
+  "session_id": "enzyme_contract_v1_golden",
+  "program_id": "enzyme_program_golden_v1",
+  "runs": [
+    {
+      "run_id": "golden_d0",
+      "task_type": "single_enzyme",
+      "reaction": {
+        "reaction_id": "rxn_001",
+        "representation": {"kind": "rxn_smiles", "value": "CCO>>CC=O"}
+      },
+      "environment": {
+        "ph": 7.4,
+        "temperature_c": 25,
+        "solvent": "water",
+        "assumption_domain": "aq_buffer_25C"
+      },
+      "constraints": {
+        "sequence": {"length_range": [50, 60], "fixed_positions": {"3": "H"}}
+      },
+      "search": {
+        "algorithm": "enumerate",
+        "budget": {"iterations": 10, "candidates": 5},
+        "seed": 42,
+        "determinism_class": "D0"
+      },
+      "scoring_profile": "enzyme-audit-strict-v1"
+    }
+  ]
+}

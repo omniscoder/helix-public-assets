@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/governance/ledger/signoff_v1.schema.json",
+  "title": "Helix Governance Signoff v1",
+  "description": "Append-only governance ledger event providing a role-based signoff for a transition_request_v1. The signature signs the canonical JSON payload with signature=null.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_type",
+    "event_id",
+    "created_at",
+    "transition_event_id",
+    "signer_identity",
+    "signer_role",
+    "signer_key_id",
+    "signature"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "const": "signoff_v1"
+    },
+    "ledger_seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "transition_event_id": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "signer_identity": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signer_role": {
+      "type": "string",
+      "enum": ["scientific_owner", "safety_reviewer", "compliance_reviewer"]
+    },
+    "signer_key_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "canonicalization", "publicKeyB64", "signatureB64", "signedPayloadSha256"],
+      "properties": {
+        "algorithm": { "type": "string", "const": "ed25519" },
+        "canonicalization": { "type": "string", "const": "helix.canonical_json_bytes.v1" },
+        "publicKeyB64": { "type": "string", "minLength": 1 },
+        "signatureB64": { "type": "string", "minLength": 1 },
+        "signedPayloadSha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

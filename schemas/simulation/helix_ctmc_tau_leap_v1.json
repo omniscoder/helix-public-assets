@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_ctmc_tau_leap_v1.json",
+  "title": "Helix CTMC Tau-Leap Config v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "sim", "loci", "params"],
+  "properties": {
+    "schema": { "const": "helix_ctmc_tau_leap_v1" },
+    "metadata": { "type": "object", "additionalProperties": true },
+    "sim": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["dt", "tEnd", "nCells", "seed"],
+      "properties": {
+        "dt": { "type": "number", "exclusiveMinimum": 0.0 },
+        "tEnd": { "type": "number", "exclusiveMinimum": 0.0 },
+        "nCells": { "type": "integer", "minimum": 1 },
+        "seed": { "type": "integer" },
+        "backend": { "type": "string", "enum": ["auto", "cpu", "cuda"], "default": "auto" },
+        "replicates": { "type": "integer", "minimum": 1, "default": 1 },
+        "recordEverySteps": { "type": ["integer", "null"], "minimum": 1 },
+        "maxLambdaDt": {
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0.0,
+          "description": "Optional clamp for Lambda*dt (stability guard)."
+        },
+        "smallXLinThresh": {
+          "type": "number",
+          "minimum": 0.0,
+          "default": 0.001,
+          "description": "If x=lambda*dt < threshold, approximate 1-exp(-x) ≈ x to avoid exp."
+        }
+      }
+    },
+    "loci": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/locus" }
+    },
+    "params": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["hazards"],
+      "properties": {
+        "hazards": { "$ref": "#/$defs/hazards" },
+        "multipliers": { "$ref": "#/$defs/multipliers" },
+        "cellHeterogeneity": { "$ref": "#/$defs/cellHeterogeneity" },
+        "outcomes": { "$ref": "#/$defs/outcomes" }
+      }
+    },
+    "priors": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional priors for ensemble parameter sampling; schema is intentionally permissive in v1."
+    },
+    "feedback": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "genes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/geneFeedbackRule" }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "finalOnly": { "type": "boolean", "default": true },
+        "timepoints": { "type": "array", "items": { "type": "number", "minimum": 0.0 } },
+        "stats": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "phase": { "type": "string", "enum": ["G1", "S", "G2", "M"] },
+    "chromState": { "type": "string", "enum": ["OPEN", "TRANSIENT", "REFRACTORY"] },
+    "locus": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["locusId", "gRnaEff"],
+      "properties": {
+        "locusId": { "type": "string", "minLength": 1 },
+        "gRnaEff": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "baselineAccessibility": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 1.0 },
+        "repeatContext": { "type": "boolean", "default": false },
+        "codingFrame": { "type": ["integer", "null"], "minimum": 0, "maximum": 2 }
+      }
+    },
+    "hazards": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "kCut": { "type": "number", "minimum": 0.0 },
+        "kResectByPhase": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "type": "number", "minimum": 0.0 }
+        },
+        "kNhej": { "type": "number", "minimum": 0.0 },
+        "kAltEj": { "type": "number", "minimum": 0.0 },
+        "kHdr": { "type": "number", "minimum": 0.0 },
+        "kSsa": { "type": "number", "minimum": 0.0 },
+        "kRelax": { "type": "number", "minimum": 0.0 },
+        "kTransientOpen": { "type": "number", "minimum": 0.0, "default": 0.0 }
+      }
+    },
+    "multipliers": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "phaseCut": { "$ref": "#/$defs/phase4" },
+        "phaseNhej": { "$ref": "#/$defs/phase4" },
+        "phaseAltEj": { "$ref": "#/$defs/phase4" },
+        "phaseHdr": { "$ref": "#/$defs/phase4" },
+        "phaseSsa": { "$ref": "#/$defs/phase4" },
+        "chromCut": { "$ref": "#/$defs/chrom3" },
+        "chromRepair": { "$ref": "#/$defs/chrom3" },
+        "chromResect": { "$ref": "#/$defs/chrom3" }
+      }
+    },
+    "phase4": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "type": "number", "minimum": 0.0 },
+      "description": "Phase multipliers in [G1,S,G2,M] order."
+    },
+    "chrom3": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "OPEN": { "type": "number", "minimum": 0.0, "default": 1.0 },
+        "TRANSIENT": { "type": "number", "minimum": 0.0, "default": 1.0 },
+        "REFRACTORY": { "type": "number", "minimum": 0.0, "default": 1.0 }
+      }
+    },
+    "cellHeterogeneity": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "repairLevelBaseline": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "NHEJ": { "type": "number", "minimum": 0.0, "default": 1.0 },
+            "ALTEJ": { "type": "number", "minimum": 0.0, "default": 1.0 },
+            "HDR": { "type": "number", "minimum": 0.0, "default": 1.0 },
+            "SSA": { "type": "number", "minimum": 0.0, "default": 1.0 }
+          }
+        },
+        "repairLevelSigmaLn": { "type": "number", "minimum": 0.0, "default": 0.0 },
+        "donorBaseline": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.0 },
+        "donorSigmaLn": { "type": "number", "minimum": 0.0, "default": 0.0 }
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "nhej": { "$ref": "#/$defs/nhejOutcome" },
+        "altEj": { "$ref": "#/$defs/altEjOutcome" },
+        "hdr": { "$ref": "#/$defs/hdrOutcome" },
+        "ssa": { "$ref": "#/$defs/ssaOutcome" }
+      }
+    },
+    "nhejOutcome": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "pIns": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.3 },
+        "delGeomP": { "type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0, "default": 0.35 },
+        "insGeomP": { "type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0, "default": 0.5 },
+        "delMax": { "type": "integer", "minimum": 1, "default": 20 },
+        "insMax": { "type": "integer", "minimum": 1, "default": 10 }
+      }
+    },
+    "altEjOutcome": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "mhGeomP": { "type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0, "default": 0.4 },
+        "mhMax": { "type": "integer", "minimum": 1, "default": 8 },
+        "delGeomP": { "type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0, "default": 0.25 },
+        "delMax": { "type": "integer", "minimum": 1, "default": 60 }
+      }
+    },
+    "hdrOutcome": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "pPrecise": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 1.0 },
+        "allowRecutAfterPrecise": { "type": "boolean", "default": true }
+      }
+    },
+    "ssaOutcome": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "delSize": { "type": "integer", "minimum": 1, "default": 200 }
+      }
+    },
+    "geneFeedbackRule": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["geneId", "bit", "trigger", "multipliers"],
+      "properties": {
+        "geneId": { "type": "string", "minLength": 1 },
+        "bit": { "type": "integer", "minimum": 0, "maximum": 127 },
+        "trigger": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["locusId", "condition"],
+          "properties": {
+            "locusId": { "type": "string" },
+            "condition": { "type": "string", "enum": ["biallelic_frameshift", "biallelic_disruptive"] }
+          }
+        },
+        "multipliers": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "NHEJ": { "type": "number", "minimum": 0.0 },
+            "ALTEJ": { "type": "number", "minimum": 0.0 },
+            "HDR": { "type": "number", "minimum": 0.0 },
+            "SSA": { "type": "number", "minimum": 0.0 }
+          }
+        }
+      }
+    }
+  }
+}

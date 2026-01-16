@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_assay_plan_v1.json",
+  "title": "Helix Assay Plan v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "primary",
+    "offTargets"
+  ],
+  "properties": {
+    "schema": {"const": "helix_assay_plan_v1"},
+    "primary": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "hitKey": {"type": "string"},
+        "recommendedAssay": {"type": "string"},
+        "scores": {"type": "object", "additionalProperties": true},
+        "pDesired": {"type": "number"},
+        "clonesNeeded": {"type": ["integer", "null"]},
+        "priority": {"type": "string"},
+        "recommendedReadoutWindow": {
+          "type": ["object", "null"],
+          "properties": {
+            "start": {"type": "integer"},
+            "end": {"type": "integer"}
+          }
+        },
+        "rationale": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "offTargets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "hitKey": {"type": "string"},
+          "riskTier": {"type": "string"},
+          "recommendedAssay": {"type": "string"},
+          "priority": {"type": "string"},
+          "recommendedReadoutWindow": {
+            "type": ["object", "null"],
+            "properties": {
+              "start": {"type": "integer"},
+              "end": {"type": "integer"}
+            }
+          },
+          "rationale": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

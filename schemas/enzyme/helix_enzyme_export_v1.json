@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/enzyme/helix_enzyme_export_v1.json",
+  "title": "Helix Enzyme Export v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "header", "summary", "ranked_candidates", "recommended", "limits"],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version"],
+      "properties": {
+        "kind": {"const": "helix.enzyme.export"},
+        "version": {"type": "integer", "const": 1}
+      }
+    },
+    "header": {"$ref": "#/$defs/header"},
+    "summary": {"type": "object", "additionalProperties": true},
+    "ranked_candidates": {"type": "array", "items": {"type": "object"}},
+    "recommended": {"type": "object", "additionalProperties": true},
+    "limits": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "header": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "artifactVersion",
+        "runId",
+        "createdUtc",
+        "engineVersion",
+        "policyHash",
+        "policyPath",
+        "policyName",
+        "semanticHash",
+        "backend",
+        "determinismClass",
+        "trust",
+        "trustCheckVersion"
+      ],
+      "properties": {
+        "artifactVersion": {"type": "string"},
+        "runId": {"type": "string"},
+        "createdUtc": {"type": "string", "format": "date-time"},
+        "engineVersion": {"type": "string"},
+        "policyHash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "policyPath": {"type": "string"},
+        "policyName": {"type": "string"},
+        "semanticHash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+        "backend": {"type": "object"},
+        "determinismClass": {"type": "string", "enum": ["D0", "D1", "D2"]},
+        "trust": {"type": "string", "enum": ["core_verified", "core_unverified", "plugin_derived", "viz_derived"]},
+        "trustCheckVersion": {"type": "string"}
+      }
+    }
+  }
+}

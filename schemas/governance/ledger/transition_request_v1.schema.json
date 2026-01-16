@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/governance/ledger/transition_request_v1.schema.json",
+  "title": "Helix Governance Transition Request v1",
+  "description": "Append-only governance ledger event requesting a lifecycle transition for a bundle. The event_id is a stable sha256 of canonical JSON content.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_type",
+    "event_id",
+    "created_at",
+    "bundle_id",
+    "from_state",
+    "to_state",
+    "policy_id",
+    "policy_hash",
+    "checks_digest",
+    "checks_report_relpath",
+    "rationale_ref",
+    "approval_surface_hash"
+  ],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "const": "transition_request_v1"
+    },
+    "ledger_seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "bundle_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "from_state": {
+      "type": "string",
+      "enum": ["Draft", "Review", "Approved", "Deprecated"]
+    },
+    "to_state": {
+      "type": "string",
+      "enum": ["Draft", "Review", "Approved", "Deprecated"]
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "checks_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "checks_report_relpath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rationale_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approval_surface_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "supersedes": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

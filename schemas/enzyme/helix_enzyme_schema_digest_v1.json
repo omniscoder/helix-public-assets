@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omniscoder.github.io/Helix/schemas/enzyme/helix_enzyme_schema_digest_v1.json",
+  "title": "Helix Enzyme Schema Digest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "digest", "entries"],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version"],
+      "properties": {
+        "kind": { "const": "helix.enzyme.schema_digest" },
+        "version": { "type": "integer", "const": 1 }
+      }
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$" },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$" }
+        }
+      }
+    }
+  }
+}

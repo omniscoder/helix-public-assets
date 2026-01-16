@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "helix_clone_plan_v1.json",
+  "title": "Helix Clone Plan v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "outcomeReportSha256",
+    "desiredAlleleKey",
+    "desiredFrequency",
+    "targetConfidence",
+    "clonesNeededBulk",
+    "clonesNeededSingleCell",
+    "expectedPositiveRate",
+    "assumptions"
+  ],
+  "properties": {
+    "schema": {"const": "helix_clone_plan_v1"},
+    "outcomeReportSha256": {"type": "string"},
+    "desiredAlleleKey": {"type": "string"},
+    "desiredFrequency": {"type": "number"},
+    "targetConfidence": {"type": "number"},
+    "expectedPositiveRate": {"type": "number"},
+    "clonesNeededBulk": {"type": ["integer", "null"]},
+    "clonesNeededSingleCell": {"type": ["integer", "null"]},
+    "assumptions": {"type": "array", "items": {"type": "string"}}
+  }
+}
